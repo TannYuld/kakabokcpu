@@ -1,0 +1,51 @@
+GENERAL OPCODE LIST
+0000    NOP
+0001    HALT
+0010    MOV Rd, Rs
+0011    MOV Rd, const
+0100    ADD Rd, Rs
+0101    ADD Rd, const
+0110    SUB Rd, Rs
+0111    STORE [Rad], Rd         //0111    SUB Rd, const (This is achived with negated ADD Rd, const)
+1000    AND Rd, Rs
+1001    AND Rd, const
+1010    OR  Rd, Rs
+1011    OR  Rd, Const
+1100    LOAD Rad, [Rd]
+1101    LOAD Rd, Const Addr
+1110    STORE [Rad], Rd
+1111    JMP 
+
+ALU OPCODE LIST
+0000    ADD
+0001    SUB
+0010    AND
+0011    OR
+0100    XOR
+0101    NOT A
+0110    NOT B
+0111    PASS A
+1000    PASS B
+1001    SHL
+1010    SHR
+
+CONDITION LIST
+0000    Always
+0001    If zero
+0010    If not zero
+0011    If carry
+0100    If negative
+0101    If overflow
+
+
+EXAMPLE:
+mov RegA 255;
+mov RegB 5;
+mov RegC RegB;
+add RegC RegA;
+
+OUTPUT:
+0011 0000 11111111
+0011 0001 00000101
+0010 0010 00000001
+0100 0010 00000000
