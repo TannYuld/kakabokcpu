@@ -552,9 +552,7 @@ fn main() {
 }
 
 /*TODO:
-1- Arity based parsing
+1- Better parsing alghortim
 2- Streaming formatters, (use std::gmt::Display) elimantes micro String allocations.
-3- Add output File/Std choice support
-4- Add input File/Std choice support
 5- Fix Subtract bug
  */
