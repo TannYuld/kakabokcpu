@@ -1,5 +1,6 @@
 use clap::Parser;
-use std::fmt::Write as fmtwrite;
+use std::fmt::{Debug, Write as fmtwrite};
+use std::fs::OpenOptions;
 use std::{
     fmt::Display,
     fs::File,
@@ -51,17 +52,22 @@ impl TryFrom<CliArgs> for Cli {
     type Error = CompilerError;
 
     fn try_from(value: CliArgs) -> Result<Self, Self::Error> {
-        fn create_file(path: PathBuf) -> CompilerResult<File> {
-            File::create(path).map_err(|e| CompilerError::OsFileReadError(e))
+        fn create_file(path: PathBuf, is_read: bool) -> CompilerResult<File> {
+            OpenOptions::new()
+                .read(is_read)
+                .write(!is_read)
+                .create(!is_read)
+                .open(path)
+                .map_err(|e| CompilerError::OsFileReadError(e))
         }
 
         let _in: LexicalInput = match value._in {
-            Some(path) => LexicalInput::File(create_file(path)?),
+            Some(path) => LexicalInput::File(create_file(path, true)?),
             None => LexicalInput::StdIn(value.stdin.map_or(Err(CompilerError::NoInput), |s| Ok(s))?),
         };
 
         let out: GenerationalOutput = match value.out {
-            Some(path) => GenerationalOutput::File(create_file(path)?),
+            Some(path) => GenerationalOutput::File(create_file(path, false)?),
             None => GenerationalOutput::StdOut,
         };
 
@@ -411,6 +417,12 @@ impl Display for CompilerError {
             CompilerError::OsFileReadError(e) => f.write_fmt(format_args!("Os file read error: {}", e)),
             CompilerError::NoInput => f.write_str("No input is given."),
         }
+    }
+}
+
+impl Debug for CompilerError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("{}", self))
     }
 }
 
