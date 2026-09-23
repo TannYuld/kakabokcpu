@@ -261,6 +261,8 @@ impl TryFrom<&str> for InstructionType {
             "store" => Ok(InstructionType::Store),
             "load" => Ok(InstructionType::Load),
             "jmp" => Ok(InstructionType::Jump),
+            "or" => Ok(InstructionType::Or),
+            "and" => Ok(InstructionType::And),
             _ => Err(CompilerError::UnexpectedInstruction(value.to_string())),
         }
     }
